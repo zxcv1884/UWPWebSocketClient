@@ -1,0 +1,91 @@
+﻿<Page
+    x:Class="UWPWebSocketClient.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UWPWebSocketClient"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    >
+    <Viewbox>
+    <Grid Height="1080" Width="1920">
+        <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" >
+            <Button x:Name="SendData" Height="100" Width="300" Content="SendData" FontSize="50" Click="SendData_Click" Margin="0,5,0,0" />
+            <Button x:Name="SendRequest" Height="100" Width="300" Content="SendRequest" FontSize="50" Click="SendRequest_Click" Margin="0,5,0,0"/>
+            <Button x:Name="SendPause" Height="100" Width="300" Content="SendPause" FontSize="50" Click="SendPause_Click" Margin="0,5,0,0" />
+            <Button x:Name="SendStop" Height="100" Width="300" Content="SendStop" FontSize="50" Click="SendStop_Click" Margin="0,5,0,0" />
+        </StackPanel>
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Status:" FontSize="40"/>
+                    <TextBlock FontSize="40" Text="{Binding Path=Status}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Peptide:" FontSize="40"/>
+                    <TextBlock x:Name="Peptide" FontSize="40"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="TubeNum:" FontSize="40"/>
+                    <TextBlock x:Name="TubeNum" FontSize="40"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Time:" FontSize="40"/>
+                    <TextBlock x:Name="Time" FontSize="40"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="PumpA:" FontSize="40"/>
+                    <TextBlock x:Name="PumpA" FontSize="40"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="PumpB:" FontSize="40"/>
+                    <TextBlock x:Name="PumpB" FontSize="40"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="PumpC:" FontSize="40"/>
+                    <TextBlock x:Name="PumpC" FontSize="40"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="PumpD:" FontSize="40"/>
+                    <TextBlock x:Name="PumpD" FontSize="40"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="PumpAml:" FontSize="40"/>
+                    <TextBlock x:Name="PumpAml" FontSize="40"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="PumpBml:" FontSize="40"/>
+                    <TextBlock x:Name="PumpBml" FontSize="40"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="PumpCml:" FontSize="40"/>
+                    <TextBlock x:Name="PumpCml" FontSize="40"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="PumpDml:" FontSize="40"/>
+                    <TextBlock x:Name="PumpDml" FontSize="40"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Waste:" FontSize="40"/>
+                    <TextBlock x:Name="Waste" FontSize="40"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Holding:" FontSize="40"/>
+                    <TextBlock x:Name="Holding" FontSize="40"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Pressure:" FontSize="40"/>
+                    <TextBlock x:Name="Pressure" FontSize="40"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="AU:" FontSize="40"/>
+                    <TextBlock x:Name="AU" FontSize="40"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="WaveLength:" FontSize="40"/>
+                    <TextBlock x:Name="WaveLength" FontSize="40"/>
+                </StackPanel>
+            </StackPanel>
+    </Grid>
+    </Viewbox>
+</Page>
