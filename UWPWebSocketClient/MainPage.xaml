@@ -11,79 +11,78 @@
     <Viewbox>
     <Grid Height="1080" Width="1920">
         <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" >
-            <Button x:Name="SendData" Height="100" Width="300" Content="SendData" FontSize="50" Click="SendData_Click" Margin="0,5,0,0" />
-            <Button x:Name="SendRequest" Height="100" Width="300" Content="SendRequest" FontSize="50" Click="SendRequest_Click" Margin="0,5,0,0"/>
-            <Button x:Name="SendPause" Height="100" Width="300" Content="SendPause" FontSize="50" Click="SendPause_Click" Margin="0,5,0,0" />
-            <Button x:Name="SendStop" Height="100" Width="300" Content="SendStop" FontSize="50" Click="SendStop_Click" Margin="0,5,0,0" />
+            <Button x:Name="Run" Height="100" Width="300" Content="Run" FontSize="50" Click="SendData_Click" Margin="0,5,0,0" />
+            <Button x:Name="Pause" Height="100" Width="300" Content="Pause" FontSize="50" Click="SendPause_Click" Margin="0,5,0,0" />
+            <Button x:Name="Stop" Height="100" Width="300" Content="Stop" FontSize="50" Click="SendStop_Click" Margin="0,5,0,0" />
         </StackPanel>
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Status:" FontSize="40"/>
-                    <TextBlock FontSize="40" Text="{Binding Path=Status}"/>
+                    <TextBlock  FontSize="40" Text="{x:Bind Status}"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Peptide:" FontSize="40"/>
-                    <TextBlock x:Name="Peptide" FontSize="40"/>
+                    <TextBlock Text="{x:Bind Peptide}" FontSize="40"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="TubeNum:" FontSize="40"/>
-                    <TextBlock x:Name="TubeNum" FontSize="40"/>
+                    <TextBlock Text="{x:Bind TubeNum}" FontSize="40"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Time:" FontSize="40"/>
-                    <TextBlock x:Name="Time" FontSize="40"/>
+                    <TextBlock Text="{x:Bind Time}" FontSize="40"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="PumpA:" FontSize="40"/>
-                    <TextBlock x:Name="PumpA" FontSize="40"/>
+                    <TextBlock Text="{x:Bind PumpA}" FontSize="40"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="PumpB:" FontSize="40"/>
-                    <TextBlock x:Name="PumpB" FontSize="40"/>
+                    <TextBlock Text="{x:Bind PumpB}" FontSize="40"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="PumpC:" FontSize="40"/>
-                    <TextBlock x:Name="PumpC" FontSize="40"/>
+                    <TextBlock Text="{x:Bind PumpC}" FontSize="40"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="PumpD:" FontSize="40"/>
-                    <TextBlock x:Name="PumpD" FontSize="40"/>
+                    <TextBlock Text="{x:Bind PumpD}" FontSize="40"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="PumpAml:" FontSize="40"/>
-                    <TextBlock x:Name="PumpAml" FontSize="40"/>
+                    <TextBlock Text="{x:Bind PumpAml}" FontSize="40"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="PumpBml:" FontSize="40"/>
-                    <TextBlock x:Name="PumpBml" FontSize="40"/>
+                    <TextBlock Text="{x:Bind PumpBml}" FontSize="40"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="PumpCml:" FontSize="40"/>
-                    <TextBlock x:Name="PumpCml" FontSize="40"/>
+                    <TextBlock Text="{x:Bind PumpCml}" FontSize="40"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="PumpDml:" FontSize="40"/>
-                    <TextBlock x:Name="PumpDml" FontSize="40"/>
+                    <TextBlock Text="{x:Bind PumpDml}" FontSize="40"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Waste:" FontSize="40"/>
-                    <TextBlock x:Name="Waste" FontSize="40"/>
+                    <TextBlock Text="{x:Bind Waste}" FontSize="40"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Holding:" FontSize="40"/>
-                    <TextBlock x:Name="Holding" FontSize="40"/>
+                    <TextBlock Text="{x:Bind Holding}" FontSize="40"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Pressure:" FontSize="40"/>
-                    <TextBlock x:Name="Pressure" FontSize="40"/>
+                    <TextBlock Text="{x:Bind Pressure}" FontSize="40"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="AU:" FontSize="40"/>
-                    <TextBlock x:Name="AU" FontSize="40"/>
+                    <TextBlock Text="{x:Bind AU}" FontSize="40"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="WaveLength:" FontSize="40"/>
-                    <TextBlock x:Name="WaveLength" FontSize="40"/>
+                    <TextBlock Text="{x:Bind WaveLength}" FontSize="40"/>
                 </StackPanel>
             </StackPanel>
     </Grid>

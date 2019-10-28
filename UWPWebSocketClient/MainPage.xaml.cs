@@ -18,6 +18,7 @@ using Newtonsoft.Json.Linq;
 using System.Threading;
 using System.ComponentModel;
 using System.Collections.ObjectModel;
+using Windows.UI.Core;
 
 // 空白頁項目範本已記錄在 https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x404
 
@@ -28,29 +29,38 @@ namespace UWPWebSocketClient
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-        private string _status;
-        public class Data
-        {
-            public string Status { get; set; }
-        }
+        //public event PropertyChangedEventHandler PropertyChanged;
+        //private string _Status;
+        public string Status { get; set; }
+        public string Peptide { get; set; }
+        public string TubeNum { get; set; }
+        public string Time { get; set; }
+        public string PumpA { get; set; }
+        public string PumpB { get; set; }
+        public string PumpC { get; set; }
+        public string PumpD { get; set; }
+        public string PumpAml { get; set; }
+        public string PumpBml { get; set; }
+        public string PumpCml { get; set; }
+        public string PumpDml { get; set; }
+        public string Waste { get; set; }
+        public string Holding { get; set; }
+        public string Pressure { get; set; }
+        public string AU { get; set; }
+        public string WaveLength { get; set; }
+
+
         GetSimulationData get = new GetSimulationData();
         static Timer RunTimer;
         public MainPage()
         {
             this.InitializeComponent();
         }
-        private void OnPropertyChanged(string property)
-        {
 
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(property));
-        }
         private void SendData_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-
                 if (!get.State()) get = new GetSimulationData("ws://192.168.1.107:4649/add");
                 var root = new
                 {
@@ -217,38 +227,39 @@ namespace UWPWebSocketClient
                        }
                 };
                 get.SendRunData(root);
-                RunTimer = new Timer(Run, null, 100, 10000);
+                RunTimer = new Timer(_RunTimer, null, 100, 1000);
             }
             catch
             {
                 Debug.WriteLine("Disconnected");
             }
         }
-        private void Run(Object o)
-        {
-
-            //Peptide.Text = data["peptide"].ToString();
-            //TubeNum.Text = data["tubeNum"].ToString();
-            //Time.Text = Math.Round(Convert.ToDouble(data["time"]), 2).ToString();
-            //PumpA.Text = Math.Round(Convert.ToDouble(data["pumpA"]), 2).ToString();
-            //PumpB.Text = Math.Round(Convert.ToDouble(data["pumpB"]), 2).ToString();
-            //PumpC.Text = Math.Round(Convert.ToDouble(data["pumpC"]), 2).ToString();
-            //PumpD.Text = Math.Round(Convert.ToDouble(data["pumpD"]), 2).ToString();
-            //PumpAml.Text = Math.Round(Convert.ToDouble(data["pumpAml"]), 2).ToString();
-            //PumpBml.Text = Math.Round(Convert.ToDouble(data["pumpBml"]), 2).ToString();
-            //PumpCml.Text = Math.Round(Convert.ToDouble(data["pumpCml"]), 2).ToString();
-            //PumpDml.Text = Math.Round(Convert.ToDouble(data["pumpDml"]), 2).ToString();
-            //Waste.Text = Math.Round(Convert.ToDouble(data["waste"]), 2).ToString();
-            //Holding.Text = Math.Round(Convert.ToDouble(data["holding"]), 2).ToString();
-            //Pressure.Text = Math.Round(Convert.ToDouble(data["pressure"]), 2).ToString();
-            //AU.Text = Math.Round(Convert.ToDouble(data["au"]), 2).ToString();
-            //WaveLength.Text = Math.Round(Convert.ToDouble(data["wavelength"]), 2).ToString();
-        }
-        private void SendRequest_Click(object sender, RoutedEventArgs e)
+        private void _RunTimer (Object o)
         {
             Dictionary<String, Object> data = get.SendRequest();
-            string a = Math.Round(Convert.ToDouble(data["status"]), 2).ToString();
-            if (!get.State()) get = new GetSimulationData("ws://192.168.1.107:4649/add");
+            Status = data["status"].ToString();
+            Peptide = data["peptide"].ToString();
+            TubeNum = data["tubeNum"].ToString();
+            Time = Math.Round(Convert.ToDouble(data["time"]), 2).ToString();
+            PumpA = Math.Round(Convert.ToDouble(data["pumpA"]), 2).ToString();
+            PumpB = Math.Round(Convert.ToDouble(data["pumpB"]), 2).ToString();
+            PumpC = Math.Round(Convert.ToDouble(data["pumpC"]), 2).ToString();
+            PumpD = Math.Round(Convert.ToDouble(data["pumpD"]), 2).ToString();
+            PumpAml = Math.Round(Convert.ToDouble(data["pumpAml"]), 2).ToString();
+            PumpBml = Math.Round(Convert.ToDouble(data["pumpBml"]), 2).ToString();
+            PumpCml = Math.Round(Convert.ToDouble(data["pumpCml"]), 2).ToString();
+            PumpDml = Math.Round(Convert.ToDouble(data["pumpDml"]), 2).ToString();
+            Waste = Math.Round(Convert.ToDouble(data["waste"]), 2).ToString();
+            Holding = Math.Round(Convert.ToDouble(data["holding"]), 2).ToString();
+            Pressure = Math.Round(Convert.ToDouble(data["pressure"]), 2).ToString();
+            AU = Math.Round(Convert.ToDouble(data["au"]), 2).ToString();
+            WaveLength = Math.Round(Convert.ToDouble(data["wavelength"]), 2).ToString();
+            _ = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+            () =>
+            {
+                this.Bindings.Update();
+            });
+
         }
 
         private void SendPause_Click(object sender, RoutedEventArgs e)
