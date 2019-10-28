@@ -61,7 +61,7 @@ namespace UWPWebSocketClient
         {
             try
             {
-                if (!get.State()) get = new GetSimulationData("ws://192.168.1.107:4649/add");
+                if (!get.State()) get = new GetSimulationData("ws://127.0.0.1:4649/add");
                 var root = new
                 {
                     Status = 0,
@@ -266,27 +266,29 @@ namespace UWPWebSocketClient
         {
             try
             {
-                if (!get.State()) get = new GetSimulationData("ws://192.168.1.107:4649/add");
+                if (!get.State()) get = new GetSimulationData("ws://127.0.0.1:4649/add");
                 get.SendPause();
             }
             catch
             {
                 Debug.WriteLine("Disconnected");
             }
-
+            RunTimer.Dispose();
         }
 
         private void SendStop_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                if (!get.State()) get = new GetSimulationData("ws://192.168.1.107:4649/add");
+                if (!get.State()) get = new GetSimulationData("ws://127.0.0.1:4649/add");
                 get.SendStop();
             }
             catch
             {
                 Debug.WriteLine("Disconnected");
             }
+            RunTimer.Dispose();
+
         }
     }
 }
