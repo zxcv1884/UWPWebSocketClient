@@ -9,7 +9,7 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     >
     <Viewbox>
-    <Grid Height="1080" Width="1920">
+    <Grid Height="1155" Width="1920">
         <StackPanel HorizontalAlignment="Left" VerticalAlignment="Center" >
             <Button x:Name="Run" Height="100" Width="300" Content="Run" FontSize="50" Click="SendData_Click" Margin="0,5,0,0" />
             <Button x:Name="Pause" Height="100" Width="300" Content="Pause" FontSize="50" Click="SendPause_Click" Margin="0,5,0,0" />
@@ -75,6 +75,23 @@
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="Pressure:" FontSize="40"/>
                     <TextBlock Text="{x:Bind Pressure}" FontSize="40"/>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="PressureA:" FontSize="40"/>
+                    <TextBlock Text="{x:Bind PressureA}" FontSize="40"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="PressureB:" FontSize="40"/>
+                    <TextBlock Text="{x:Bind PressureB}" FontSize="40"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="PressureC:" FontSize="40"/>
+                    <TextBlock Text="{x:Bind PressureC}" FontSize="40"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="PressureD:" FontSize="40"/>
+                    <TextBlock Text="{x:Bind PressureD}" FontSize="40"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <TextBlock Text="AU:" FontSize="40"/>

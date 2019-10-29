@@ -46,6 +46,11 @@ namespace UWPWebSocketClient
         public string Waste { get; set; }
         public string Holding { get; set; }
         public string Pressure { get; set; }
+        public string PressureA { get; set; }
+        public string PressureB { get; set; }
+        public string PressureC { get; set; }
+        public string PressureD { get; set; }
+
         public string AU { get; set; }
         public string WaveLength { get; set; }
 
@@ -62,172 +67,28 @@ namespace UWPWebSocketClient
             try
             {
                 if (!get.State()) get = new GetSimulationData("ws://127.0.0.1:4649/add");
+                var purification = new List<Dictionary<string, object>>();
+                purification.Add(new Dictionary<string, object> { { "TimeStart", 0 }, { "TimeEnd", 1 }, { "PumpAStart", 40 }, { "PumpAEnd", 60 }, { "PumpBStart", 10 }, { "PumpBEnd", 10 }, { "PumpCStart", 50 }, { "PumpCEnd", 30 }, { "PumpDStart", 0 }, { "PumpDEnd", 0 }, { "FlowRate", 25 }, { "FlowDestination", 1 } });
+                purification.Add(new Dictionary<string, object> { { "TimeStart", 1 }, { "TimeEnd", 2 }, { "PumpAStart", 70 }, { "PumpAEnd", 60 }, { "PumpBStart", 20 }, { "PumpBEnd", 20 }, { "PumpCStart", 10 }, { "PumpCEnd", 20 }, { "PumpDStart", 0 }, { "PumpDEnd", 0 }, { "FlowRate", 25 }, { "FlowDestination", 2 } });
+                purification.Add(new Dictionary<string, object> { { "TimeStart", 2 }, { "TimeEnd", 3 }, { "PumpAStart", 70 }, { "PumpAEnd", 30 }, { "PumpBStart", 20 }, { "PumpBEnd", 50 }, { "PumpCStart", 10 }, { "PumpCEnd", 20 }, { "PumpDStart", 0 }, { "PumpDEnd", 0 }, { "FlowRate", 400 }, { "FlowDestination", 3 } });
+                purification.Add(new Dictionary<string, object> { { "TimeStart", 3 }, { "TimeEnd", 4 }, { "PumpAStart", 30 }, { "PumpAEnd", 0 }, { "PumpBStart", 50 }, { "PumpBEnd", 70 }, { "PumpCStart", 20 }, { "PumpCEnd", 30 }, { "PumpDStart", 0 }, { "PumpDEnd", 0 }, { "FlowRate", 30 }, { "FlowDestination", 2 } });
+                var washcycle = new List<Dictionary<string, object>>();
+                washcycle.Add(new Dictionary<string, object> { { "TimeStart", 0 }, { "TimeEnd", 1 }, { "PumpAStart", 40 }, { "PumpAEnd", 60 }, { "PumpBStart", 10 }, { "PumpBEnd", 10 }, { "PumpCStart", 50 }, { "PumpCEnd", 30 }, { "PumpDStart", 0 }, { "PumpDEnd", 0 }, { "FlowRate", 25 }, { "FlowDestination", 1 } });
+                washcycle.Add(new Dictionary<string, object> { { "TimeStart", 1 }, { "TimeEnd", 2 }, { "PumpAStart", 70 }, { "PumpAEnd", 60 }, { "PumpBStart", 20 }, { "PumpBEnd", 20 }, { "PumpCStart", 10 }, { "PumpCEnd", 20 }, { "PumpDStart", 0 }, { "PumpDEnd", 0 }, { "FlowRate", 25 }, { "FlowDestination", 2 } });
+                washcycle.Add(new Dictionary<string, object> { { "TimeStart", 2 }, { "TimeEnd", 3 }, { "PumpAStart", 70 }, { "PumpAEnd", 30 }, { "PumpBStart", 20 }, { "PumpBEnd", 50 }, { "PumpCStart", 10 }, { "PumpCEnd", 20 }, { "PumpDStart", 0 }, { "PumpDEnd", 0 }, { "FlowRate", 400 }, { "FlowDestination", 3 } });
+                washcycle.Add(new Dictionary<string, object> { { "TimeStart", 3 }, { "TimeEnd", 4 }, { "PumpAStart", 30 }, { "PumpAEnd", 0 }, { "PumpBStart", 50 }, { "PumpBEnd", 70 }, { "PumpCStart", 20 }, { "PumpCEnd", 30 }, { "PumpDStart", 0 }, { "PumpDEnd", 0 }, { "FlowRate", 30 }, { "FlowDestination", 2 } });
                 var root = new
                 {
                     Status = 0,
                     Peptide = 1,
                     Tubes = 36,
-                    TubeNum = 1,
+                    TubeNum = -1,
                     TubeML = 50,
-                    Purification = new object[]
-                       {
-                         new
-                        {
-                            TimeStart = 0,
-                            TimeEnd = 1,
-                            PumpAStart = 20,
-                            PumpAEnd = 40,
-                            PumpBStart = 80,
-                            PumpBEnd = 60,
-                            PumpCStart = 0,
-                            PumpCEnd = 0,
-                            PumpDStart = 0,
-                            PumpDEnd = 0,
-                            FlowRate = 25,
-                            FlowDestination = 1,
-                        },
-                        new
-                        {
-                            TimeStart = 1,
-                            TimeEnd = 2,
-                            PumpAStart = 40,
-                            PumpAEnd = 45,
-                            PumpBStart = 60,
-                            PumpBEnd = 55,
-                            PumpCStart = 0,
-                            PumpCEnd = 0,
-                            PumpDStart = 0,
-                            PumpDEnd = 0,
-                            FlowRate = 25,
-                            FlowDestination = 2,
-                        },
-                        new
-                        {
-                            TimeStart = 2,
-                            TimeEnd = 3,
-                            PumpAStart = 45,
-                            PumpAEnd = 55,
-                            PumpBStart = 55,
-                            PumpBEnd = 45,
-                            PumpCStart = 0,
-                            PumpCEnd = 0,
-                            PumpDStart = 0,
-                            PumpDEnd = 0,
-                            FlowRate = 400,
-                            FlowDestination = 3,
-                        },
-                        new
-                        {
-                            TimeStart = 3,
-                            TimeEnd = 4,
-                            PumpAStart = 55,
-                            PumpAEnd = 60,
-                            PumpBStart = 45,
-                            PumpBEnd = 40,
-                            PumpCStart = 0,
-                            PumpCEnd = 0,
-                            PumpDStart = 0,
-                            PumpDEnd = 0,
-                            FlowRate = 30,
-                            FlowDestination = 2,
-                        },
-                        new
-                        {
-                            TimeStart = 4,
-                            TimeEnd = 5,
-                            PumpAStart = 60,
-                            PumpAEnd = 55,
-                            PumpBStart = 40,
-                            PumpBEnd = 45,
-                            PumpCStart = 0,
-                            PumpCEnd = 0,
-                            PumpDStart = 0,
-                            PumpDEnd = 0,
-                            FlowRate = 25,
-                            FlowDestination = 1,
-                        }
-                       },
-                    WashCycle = new object[]
-                       {
-                        new
-                        {
-                            TimeStart = 0,
-                            TimeEnd = 5,
-                            PumpAStart = 0,
-                            PumpAEnd = 40,
-                            PumpBStart = 0,
-                            PumpBEnd = 60,
-                            PumpCStart = 0,
-                            PumpCEnd = 0,
-                            PumpDStart = 0,
-                            PumpDEnd = 0,
-                            FlowRate = 25,
-                            FlowDestination = 1,
-                        },
-                        new
-                        {
-                            TimeStart = 5,
-                            TimeEnd = 10,
-                            PumpAStart = 40,
-                            PumpAEnd = 45,
-                            PumpBStart = 60,
-                            PumpBEnd = 55,
-                            PumpCStart = 0,
-                            PumpCEnd = 0,
-                            PumpDStart = 0,
-                            PumpDEnd = 0,
-                            FlowRate = 25,
-                            FlowDestination = 2,
-                        },
-                        new
-                        {
-                            TimeStart = 10,
-                            TimeEnd = 75,
-                            PumpAStart = 45,
-                            PumpAEnd = 55,
-                            PumpBStart = 55,
-                            PumpBEnd = 45,
-                            PumpCStart = 0,
-                            PumpCEnd = 0,
-                            PumpDStart = 0,
-                            PumpDEnd = 0,
-                            FlowRate = 30,
-                            FlowDestination = 3,
-                        },
-                        new
-                        {
-                            TimeStart = 75,
-                            TimeEnd = 80,
-                            PumpAStart = 55,
-                            PumpAEnd = 60,
-                            PumpBStart = 45,
-                            PumpBEnd = 40,
-                            PumpCStart = 0,
-                            PumpCEnd = 0,
-                            PumpDStart = 0,
-                            PumpDEnd = 0,
-                            FlowRate = 30,
-                            FlowDestination = 2,
-                        },
-                        new
-                        {
-                            TimeStart = 80,
-                            TimeEnd = 85,
-                            PumpAStart = 60,
-                            PumpAEnd = 55,
-                            PumpBStart = 40,
-                            PumpBEnd = 45,
-                            PumpCStart = 0,
-                            PumpCEnd = 0,
-                            PumpDStart = 0,
-                            PumpDEnd = 0,
-                            FlowRate = 25,
-                            FlowDestination = 1,
-                        }
-                       }
+                    Purification = purification,
+                    WashCycle = washcycle
                 };
                 get.SendRunData(root);
-                RunTimer = new Timer(_RunTimer, null, 100, 1000);
+                RunTimer = new Timer(_RunTimer, null, 1000, 100);
             }
             catch
             {
@@ -237,29 +98,35 @@ namespace UWPWebSocketClient
         private void _RunTimer (Object o)
         {
             Dictionary<String, Object> data = get.SendRequest();
-            Status = data["status"].ToString();
-            Peptide = data["peptide"].ToString();
-            TubeNum = data["tubeNum"].ToString();
-            Time = Math.Round(Convert.ToDouble(data["time"]), 2).ToString();
-            PumpA = Math.Round(Convert.ToDouble(data["pumpA"]), 2).ToString();
-            PumpB = Math.Round(Convert.ToDouble(data["pumpB"]), 2).ToString();
-            PumpC = Math.Round(Convert.ToDouble(data["pumpC"]), 2).ToString();
-            PumpD = Math.Round(Convert.ToDouble(data["pumpD"]), 2).ToString();
-            PumpAml = Math.Round(Convert.ToDouble(data["pumpAml"]), 2).ToString();
-            PumpBml = Math.Round(Convert.ToDouble(data["pumpBml"]), 2).ToString();
-            PumpCml = Math.Round(Convert.ToDouble(data["pumpCml"]), 2).ToString();
-            PumpDml = Math.Round(Convert.ToDouble(data["pumpDml"]), 2).ToString();
-            Waste = Math.Round(Convert.ToDouble(data["waste"]), 2).ToString();
-            Holding = Math.Round(Convert.ToDouble(data["holding"]), 2).ToString();
-            Pressure = Math.Round(Convert.ToDouble(data["pressure"]), 2).ToString();
-            AU = Math.Round(Convert.ToDouble(data["au"]), 2).ToString();
-            WaveLength = Math.Round(Convert.ToDouble(data["wavelength"]), 2).ToString();
-            _ = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
-            () =>
-            {
-                this.Bindings.Update();
-            });
+            if(data != null) {
+                Status = data["status"].ToString();
+                Peptide = data["peptide"].ToString();
+                TubeNum = data["tubeNum"].ToString();
+                Time = Math.Round(Convert.ToDouble(data["time"]), 2).ToString();
+                PumpA = Math.Round(Convert.ToDouble(data["pumpA"]), 2).ToString();
+                PumpB = Math.Round(Convert.ToDouble(data["pumpB"]), 2).ToString();
+                PumpC = Math.Round(Convert.ToDouble(data["pumpC"]), 2).ToString();
+                PumpD = Math.Round(Convert.ToDouble(data["pumpD"]), 2).ToString();
+                PumpAml = Math.Round(Convert.ToDouble(data["pumpAml"]), 2).ToString();
+                PumpBml = Math.Round(Convert.ToDouble(data["pumpBml"]), 2).ToString();
+                PumpCml = Math.Round(Convert.ToDouble(data["pumpCml"]), 2).ToString();
+                PumpDml = Math.Round(Convert.ToDouble(data["pumpDml"]), 2).ToString();
+                Waste = Math.Round(Convert.ToDouble(data["waste"]), 2).ToString();
+                Holding = Math.Round(Convert.ToDouble(data["holding"]), 2).ToString();
+                Pressure = Math.Round(Convert.ToDouble(data["pressure"]), 2).ToString();
+                PressureA = Math.Round(Convert.ToDouble(data["pressureA"]), 2).ToString();
+                PressureB = Math.Round(Convert.ToDouble(data["pressureB"]), 2).ToString();
+                PressureC = Math.Round(Convert.ToDouble(data["pressureC"]), 2).ToString();
+                PressureD = Math.Round(Convert.ToDouble(data["pressureD"]), 2).ToString();
 
+                AU = Math.Round(Convert.ToDouble(data["au"]), 2).ToString();
+                WaveLength = Math.Round(Convert.ToDouble(data["wavelength"]), 2).ToString();
+                _ = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,
+                () =>
+                {
+                    this.Bindings.Update();
+                });
+            }
         }
 
         private void SendPause_Click(object sender, RoutedEventArgs e)
@@ -273,7 +140,13 @@ namespace UWPWebSocketClient
             {
                 Debug.WriteLine("Disconnected");
             }
-            RunTimer.Dispose();
+            try
+            {
+                RunTimer.Dispose();
+            }
+            catch
+            {
+            }
         }
 
         private void SendStop_Click(object sender, RoutedEventArgs e)
@@ -287,8 +160,13 @@ namespace UWPWebSocketClient
             {
                 Debug.WriteLine("Disconnected");
             }
-            RunTimer.Dispose();
-
+            try
+            {
+                RunTimer.Dispose();
+            }
+            catch
+            {
+            }
         }
     }
 }
