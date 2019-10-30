@@ -50,7 +50,8 @@ namespace UWPWebSocketClient
         public string PressureB { get; set; }
         public string PressureC { get; set; }
         public string PressureD { get; set; }
-
+        public string FlowDestination { get; set; }
+        
         public string AU { get; set; }
         public string WaveLength { get; set; }
 
@@ -118,7 +119,7 @@ namespace UWPWebSocketClient
                 PressureB = Math.Round(Convert.ToDouble(data["pressureB"]), 2).ToString();
                 PressureC = Math.Round(Convert.ToDouble(data["pressureC"]), 2).ToString();
                 PressureD = Math.Round(Convert.ToDouble(data["pressureD"]), 2).ToString();
-
+                FlowDestination = Convert.ToInt32(data["flowDestination"]).ToString();
                 AU = Math.Round(Convert.ToDouble(data["au"]), 2).ToString();
                 WaveLength = Math.Round(Convert.ToDouble(data["wavelength"]), 2).ToString();
                 _ = Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal,

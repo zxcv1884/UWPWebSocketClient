@@ -101,6 +101,10 @@
                     <TextBlock Text="WaveLength:" FontSize="40"/>
                     <TextBlock Text="{x:Bind WaveLength}" FontSize="40"/>
                 </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="FlowDestination:" FontSize="40"/>
+                    <TextBlock Text="{x:Bind FlowDestination}" FontSize="40"/>
+                </StackPanel>
             </StackPanel>
     </Grid>
     </Viewbox>
