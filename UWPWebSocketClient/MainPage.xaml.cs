@@ -1,24 +1,13 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using System.Net.WebSockets;
+using System.Text;
+using System.Threading;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-using GetSimulation;
-using Newtonsoft.Json.Linq;
-using System.Threading;
-using System.ComponentModel;
-using System.Collections.ObjectModel;
-using Windows.UI.Core;
 
 // 空白頁項目範本已記錄在 https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x404
 
@@ -51,55 +40,40 @@ namespace UWPWebSocketClient
         public string PressureC { get; set; }
         public string PressureD { get; set; }
         public string FlowDestination { get; set; }
-        
+
         public string AU { get; set; }
         public string WaveLength { get; set; }
-
-
-        GetSimulationData get = new GetSimulationData();
-        static Timer RunTimer;
+        ClientWebSocket ws = new ClientWebSocket();
         public MainPage()
         {
             this.InitializeComponent();
         }
-
-        private void SendData_Click(object sender, RoutedEventArgs e)
+        public bool State()
         {
-            try
+            if (ws.State.ToString() == "Closed" || ws.State.ToString() == "None" || ws.State.ToString() == "Aborted")
             {
-                if (!get.State()) get = new GetSimulationData("ws://127.0.0.1:4649/add");
-                var purification = new List<Dictionary<string, object>>();
-                purification.Add(new Dictionary<string, object> { { "TimeStart", 0 }, { "TimeEnd", 1 }, { "PumpAStart", 40 }, { "PumpAEnd", 60 }, { "PumpBStart", 10 }, { "PumpBEnd", 10 }, { "PumpCStart", 50 }, { "PumpCEnd", 30 }, { "PumpDStart", 0 }, { "PumpDEnd", 0 }, { "FlowRate", 25 }, { "FlowDestination", 1 } });
-                purification.Add(new Dictionary<string, object> { { "TimeStart", 1 }, { "TimeEnd", 2 }, { "PumpAStart", 70 }, { "PumpAEnd", 60 }, { "PumpBStart", 20 }, { "PumpBEnd", 20 }, { "PumpCStart", 10 }, { "PumpCEnd", 20 }, { "PumpDStart", 0 }, { "PumpDEnd", 0 }, { "FlowRate", 25 }, { "FlowDestination", 2 } });
-                purification.Add(new Dictionary<string, object> { { "TimeStart", 2 }, { "TimeEnd", 3 }, { "PumpAStart", 70 }, { "PumpAEnd", 30 }, { "PumpBStart", 20 }, { "PumpBEnd", 50 }, { "PumpCStart", 10 }, { "PumpCEnd", 20 }, { "PumpDStart", 0 }, { "PumpDEnd", 0 }, { "FlowRate", 400 }, { "FlowDestination", 3 } });
-                purification.Add(new Dictionary<string, object> { { "TimeStart", 3 }, { "TimeEnd", 4 }, { "PumpAStart", 30 }, { "PumpAEnd", 0 }, { "PumpBStart", 50 }, { "PumpBEnd", 70 }, { "PumpCStart", 20 }, { "PumpCEnd", 30 }, { "PumpDStart", 0 }, { "PumpDEnd", 0 }, { "FlowRate", 30 }, { "FlowDestination", 2 } });
-                var washcycle = new List<Dictionary<string, object>>();
-                washcycle.Add(new Dictionary<string, object> { { "TimeStart", 0 }, { "TimeEnd", 1 }, { "PumpAStart", 40 }, { "PumpAEnd", 60 }, { "PumpBStart", 10 }, { "PumpBEnd", 10 }, { "PumpCStart", 50 }, { "PumpCEnd", 30 }, { "PumpDStart", 0 }, { "PumpDEnd", 0 }, { "FlowRate", 25 }, { "FlowDestination", 1 } });
-                washcycle.Add(new Dictionary<string, object> { { "TimeStart", 1 }, { "TimeEnd", 2 }, { "PumpAStart", 70 }, { "PumpAEnd", 60 }, { "PumpBStart", 20 }, { "PumpBEnd", 20 }, { "PumpCStart", 10 }, { "PumpCEnd", 20 }, { "PumpDStart", 0 }, { "PumpDEnd", 0 }, { "FlowRate", 25 }, { "FlowDestination", 2 } });
-                washcycle.Add(new Dictionary<string, object> { { "TimeStart", 2 }, { "TimeEnd", 3 }, { "PumpAStart", 70 }, { "PumpAEnd", 30 }, { "PumpBStart", 20 }, { "PumpBEnd", 50 }, { "PumpCStart", 10 }, { "PumpCEnd", 20 }, { "PumpDStart", 0 }, { "PumpDEnd", 0 }, { "FlowRate", 400 }, { "FlowDestination", 3 } });
-                washcycle.Add(new Dictionary<string, object> { { "TimeStart", 3 }, { "TimeEnd", 4 }, { "PumpAStart", 30 }, { "PumpAEnd", 0 }, { "PumpBStart", 50 }, { "PumpBEnd", 70 }, { "PumpCStart", 20 }, { "PumpCEnd", 30 }, { "PumpDStart", 0 }, { "PumpDEnd", 0 }, { "FlowRate", 30 }, { "FlowDestination", 2 } });
-                var root = new
-                {
-                    Status = 0,
-                    Peptide = 1,
-                    Tubes = 36,
-                    TubeNum = -1,
-                    TubeML = 50,
-                    Purification = purification,
-                    WashCycle = washcycle
-                };
-                get.SendRunData(root);
-                RunTimer = new Timer(_RunTimer, null, 1000, 100);
+                return false;
             }
-            catch
+            else
             {
-                Debug.WriteLine("Disconnected");
+                return true;
             }
         }
-        private void _RunTimer (Object o)
+        private async void ReceiveData(ClientWebSocket websocket)
         {
-            Dictionary<String, Object> data = get.SendRequest();
-            if(data != null) {
+            while (true && State())
+            {
+                byte[] bytes = new byte[20000];
+                WebSocketReceiveResult result = await ws.ReceiveAsync(bytes, new CancellationToken());
+                parse(bytes);
+            }
+        }
+        public void parse(byte[] json)
+        {
+            string jsonStr = Encoding.UTF8.GetString(json);
+            Dictionary<string, object> data = JsonConvert.DeserializeObject<Dictionary<string, object>>(jsonStr);
+            if (data != null)
+            {
                 Status = data["status"].ToString();
                 Peptide = data["peptide"].ToString();
                 TubeNum = data["tubeNum"].ToString();
@@ -134,19 +108,12 @@ namespace UWPWebSocketClient
         {
             try
             {
-                if (!get.State()) get = new GetSimulationData("ws://127.0.0.1:4649/add");
-                get.SendPause();
+                if (!State()) ws = new ClientWebSocket(); ws.ConnectAsync(new Uri("ws://127.0.0.1:4649/add"), new CancellationToken()).Wait();
+                ws.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes("pause")), WebSocketMessageType.Text, true, new CancellationToken()).Wait();
             }
             catch
             {
                 Debug.WriteLine("Disconnected");
-            }
-            try
-            {
-                RunTimer.Dispose();
-            }
-            catch
-            {
             }
         }
 
@@ -154,19 +121,51 @@ namespace UWPWebSocketClient
         {
             try
             {
-                if (!get.State()) get = new GetSimulationData("ws://127.0.0.1:4649/add");
-                get.SendStop();
+                if (!State()) ws = new ClientWebSocket(); ws.ConnectAsync(new Uri("ws://127.0.0.1:4649/add"), new CancellationToken()).Wait();
+                ws.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes("stop")), WebSocketMessageType.Text, true, new CancellationToken()).Wait();
             }
             catch
             {
                 Debug.WriteLine("Disconnected");
             }
+
+        }
+
+        private  void SendData_Click(object sender, RoutedEventArgs e)
+        {
             try
             {
-                RunTimer.Dispose();
+                if (!State()) ws = new ClientWebSocket(); ws.ConnectAsync(new Uri("ws://127.0.0.1:4649/add"), new CancellationToken()).Wait(2000);
+                var purification = new List<Dictionary<string, object>>();
+                purification.Add(new Dictionary<string, object> { { "TimeStart", 0 }, { "TimeEnd", 1 }, { "PumpAStart", 40 }, { "PumpAEnd", 60 }, { "PumpBStart", 10 }, { "PumpBEnd", 10 }, { "PumpCStart", 50 }, { "PumpCEnd", 30 }, { "PumpDStart", 0 }, { "PumpDEnd", 0 }, { "FlowRate", 25 }, { "FlowDestination", 1 } });
+                purification.Add(new Dictionary<string, object> { { "TimeStart", 1 }, { "TimeEnd", 2 }, { "PumpAStart", 70 }, { "PumpAEnd", 60 }, { "PumpBStart", 20 }, { "PumpBEnd", 20 }, { "PumpCStart", 10 }, { "PumpCEnd", 20 }, { "PumpDStart", 0 }, { "PumpDEnd", 0 }, { "FlowRate", 25 }, { "FlowDestination", 2 } });
+                purification.Add(new Dictionary<string, object> { { "TimeStart", 2 }, { "TimeEnd", 3 }, { "PumpAStart", 70 }, { "PumpAEnd", 30 }, { "PumpBStart", 20 }, { "PumpBEnd", 50 }, { "PumpCStart", 10 }, { "PumpCEnd", 20 }, { "PumpDStart", 0 }, { "PumpDEnd", 0 }, { "FlowRate", 400 }, { "FlowDestination", 3 } });
+                purification.Add(new Dictionary<string, object> { { "TimeStart", 3 }, { "TimeEnd", 4 }, { "PumpAStart", 30 }, { "PumpAEnd", 0 }, { "PumpBStart", 50 }, { "PumpBEnd", 70 }, { "PumpCStart", 20 }, { "PumpCEnd", 30 }, { "PumpDStart", 0 }, { "PumpDEnd", 0 }, { "FlowRate", 30 }, { "FlowDestination", 2 } });
+                var washcycle = new List<Dictionary<string, object>>();
+                washcycle.Add(new Dictionary<string, object> { { "TimeStart", 0 }, { "TimeEnd", 1 }, { "PumpAStart", 40 }, { "PumpAEnd", 60 }, { "PumpBStart", 10 }, { "PumpBEnd", 10 }, { "PumpCStart", 50 }, { "PumpCEnd", 30 }, { "PumpDStart", 0 }, { "PumpDEnd", 0 }, { "FlowRate", 25 }, { "FlowDestination", 1 } });
+                washcycle.Add(new Dictionary<string, object> { { "TimeStart", 1 }, { "TimeEnd", 2 }, { "PumpAStart", 70 }, { "PumpAEnd", 60 }, { "PumpBStart", 20 }, { "PumpBEnd", 20 }, { "PumpCStart", 10 }, { "PumpCEnd", 20 }, { "PumpDStart", 0 }, { "PumpDEnd", 0 }, { "FlowRate", 25 }, { "FlowDestination", 2 } });
+                washcycle.Add(new Dictionary<string, object> { { "TimeStart", 2 }, { "TimeEnd", 3 }, { "PumpAStart", 70 }, { "PumpAEnd", 30 }, { "PumpBStart", 20 }, { "PumpBEnd", 50 }, { "PumpCStart", 10 }, { "PumpCEnd", 20 }, { "PumpDStart", 0 }, { "PumpDEnd", 0 }, { "FlowRate", 400 }, { "FlowDestination", 3 } });
+                washcycle.Add(new Dictionary<string, object> { { "TimeStart", 3 }, { "TimeEnd", 4 }, { "PumpAStart", 30 }, { "PumpAEnd", 0 }, { "PumpBStart", 50 }, { "PumpBEnd", 70 }, { "PumpCStart", 20 }, { "PumpCEnd", 30 }, { "PumpDStart", 0 }, { "PumpDEnd", 0 }, { "FlowRate", 30 }, { "FlowDestination", 2 } });
+                var root = new
+                {
+                    Status = 0,
+                    Peptide = 1,
+                    Tubes = 36,
+                    TubeNum = -1,
+                    TubeML = 50,
+                    Purification = purification,
+                    WashCycle = washcycle
+                };
+                ws.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(root))), WebSocketMessageType.Text, true, new CancellationToken()).Wait();
+                ReceiveData(ws);
+            }
+            catch(InvalidOperationException o)
+            {
+                Debug.WriteLine(o);
             }
             catch
             {
+
             }
         }
     }
