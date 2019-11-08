@@ -55,17 +55,23 @@ namespace UWPWebSocketClient
                 return false;
             }
             else
-            {
+            {             
                 return true;
             }
         }
         private async void ReceiveData(ClientWebSocket websocket)
         {
+            try {
             while (true && State())
             {
                 byte[] bytes = new byte[20000];
                 WebSocketReceiveResult result = await ws.ReceiveAsync(bytes, new CancellationToken());
                 parse(bytes);
+            }
+            }
+            catch (ObjectDisposedException o)
+            {
+                Debug.WriteLine(o);
             }
         }
         public void parse(byte[] json)
@@ -108,7 +114,11 @@ namespace UWPWebSocketClient
         {
             try
             {
-                if (!State()) ws = new ClientWebSocket(); ws.ConnectAsync(new Uri("ws://127.0.0.1:4649/add"), new CancellationToken()).Wait();
+                if (!State())
+                {
+                    if (ws.State.ToString() != "None") ws = new ClientWebSocket();
+                    ws.ConnectAsync(new Uri("ws://127.0.0.1:4649/add"), new CancellationToken()).Wait();
+                }
                 ws.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes("pause")), WebSocketMessageType.Text, true, new CancellationToken()).Wait();
             }
             catch
@@ -121,7 +131,10 @@ namespace UWPWebSocketClient
         {
             try
             {
-                if (!State()) ws = new ClientWebSocket(); ws.ConnectAsync(new Uri("ws://127.0.0.1:4649/add"), new CancellationToken()).Wait();
+                if (!State()) {
+                    if(ws.State.ToString() != "None") ws = new ClientWebSocket();
+                    ws.ConnectAsync(new Uri("ws://127.0.0.1:4649/add"), new CancellationToken()).Wait();
+                }
                 ws.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes("stop")), WebSocketMessageType.Text, true, new CancellationToken()).Wait();
             }
             catch
@@ -135,7 +148,11 @@ namespace UWPWebSocketClient
         {
             try
             {
-                if (!State()) ws = new ClientWebSocket(); ws.ConnectAsync(new Uri("ws://127.0.0.1:4649/add"), new CancellationToken()).Wait(2000);
+                if (!State())
+                {
+                    if (ws.State.ToString() != "None") ws = new ClientWebSocket();
+                    ws.ConnectAsync(new Uri("ws://127.0.0.1:4649/add"), new CancellationToken()).Wait();
+                }
                 var purification = new List<Dictionary<string, object>>();
                 purification.Add(new Dictionary<string, object> { { "TimeStart", 0 }, { "TimeEnd", 1 }, { "PumpAStart", 40 }, { "PumpAEnd", 60 }, { "PumpBStart", 10 }, { "PumpBEnd", 10 }, { "PumpCStart", 50 }, { "PumpCEnd", 30 }, { "PumpDStart", 0 }, { "PumpDEnd", 0 }, { "FlowRate", 25 }, { "FlowDestination", 1 } });
                 purification.Add(new Dictionary<string, object> { { "TimeStart", 1 }, { "TimeEnd", 2 }, { "PumpAStart", 70 }, { "PumpAEnd", 60 }, { "PumpBStart", 20 }, { "PumpBEnd", 20 }, { "PumpCStart", 10 }, { "PumpCEnd", 20 }, { "PumpDStart", 0 }, { "PumpDEnd", 0 }, { "FlowRate", 25 }, { "FlowDestination", 2 } });
