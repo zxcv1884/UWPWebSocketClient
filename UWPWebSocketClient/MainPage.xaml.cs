@@ -108,6 +108,10 @@ namespace UWPWebSocketClient
                     this.Bindings.Update();
                 });
             }
+            if(data["status"].ToString() == "3")
+            {
+                Debug.WriteLine("Status = 3");
+            }
         }
 
         private void SendPause_Click(object sender, RoutedEventArgs e)
